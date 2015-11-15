@@ -3,6 +3,7 @@ import numpy as np
 from lookups import find_nearest, lookup_fn, t_lifetime, lookup_taum
 import logging
 from datetime import datetime
+from integrals import dust_integral
 
 FORMAT = '%(asctime)-15s %(message)s'
 logging.basicConfig(format=FORMAT)
@@ -49,13 +50,6 @@ class ChemModel:
         try:
             vals = find_nearest(self.sfh,t)
 
-            return vals[1]
-        except:
-            logger.error("No SFH yet")
-
-    def final_sfr(self, t):
-        try:
-            vals = find_nearest(self.extra_sfr,t)
             return vals[1]
         except:
             logger.error("No SFH yet")
@@ -339,66 +333,12 @@ class ChemModel:
                                 ISM only
          -- dz_ratio_list: dust to metal ratio
         '''
-        # initialize
-        md = 0.
-        md_all = 0.
-        md_stars = 0.
-        md_gg = 0.
-        prev_t = 1e-3
-        dust_list = []
-        dust_list_sources = []
-        dz_ratio_list = []
-        timescales = []
         # Limit time to less than 20. Gyrs
         time = self.sfh[:,0]
         time = time[time < self.tend]
         # sort out zdiff
         now = datetime.now()
-        for item, t in enumerate(time):
-            mg = gasmass[item]
-            z = metallicity[item]
-            r_sn = snrate[item]
-
-        #set up dust mass from stars (recycled(LIMS) + new (SN+LIMS))
-            mdust_stars = self.ejected_d_mass(t, z)
-
-        # set up inflow contribution to dust mass (read from dictionary)
-            mdust_inf = self.inflows['dust']*f.inflows(self.sfr(t), self.inflows['xSFR']).value
-
-            if self.outflows['dust']:
-                mdust_out = (1./mg)*f.outflows(self.sfr(t), self.outflows['xSFR']).value
-            else:
-                mdust_out = 0.
-
-            # destruction timescales + dust mass from grain growth and destruction
-        #    t_des = 1e-6*f.destruction_timescale(self.destroy_ism,mg,r_sn).value
-            mdust_gg, t_gg = f.graingrowth(self.epsilon,mg,self.sfr(t),z,md,self.coldfraction)
-            mdust_des, t_des = f.destroy_dust(self.destroy_ism,mg,r_sn,md,self.coldfraction)
-        # Integrate dust mass equation with time
-            ddust = - md*f.astration(mg,self.sfr(t)) \
-                        + mdust_stars \
-                        + mdust_inf \
-                        - md*mdust_out \
-                        + mdust_gg \
-                        - mdust_des
-            # to plot dust sources (these are dust in rather than dust mass at any time)
-            dust_source_all = mdust_stars + mdust_gg
-            dt = t - prev_t
-            prev_t = t
-            md += ddust*dt
-            md_all += dust_source_all*dt
-            md_gg += mdust_gg*dt
-            md_stars += mdust_stars*dt
-            dust_list.append(md)
-            dust_list_sources.append((md_all, md_stars, md_gg))
-            # save timescales for grain growth and destruction in Gyr
-            timescales.append((t_des,t_gg))
-            if z <= 0.:
-                dust_to_metals = 0.
-            else:
-                dust_to_metals = (md/mg)/z
-        #    print t, mg/4.8e10, z, mdust_des, t_des, t_gg #mdust_ast, mdust_stars, des
-            dz_ratio_list.append(dust_to_metals)
+        dust_list, dust_list_sources, dz_ratio_list, timescales = dust_integral(self, snrate, gasmass, metallicity, time)
         print("Dust mass exterior loop %s" % str(datetime.now()-now))
         # Output time and gas mass as Numpy Arrays
         return time, np.array(dust_list), np.array(dust_list_sources), \

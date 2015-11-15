@@ -83,6 +83,7 @@ def remnant_mass(m):
     rem_mass = rem_mass*u.solMass
     return rem_mass
 
+@profile
 def initial_mass_function(m, choice):
     '''
     Returns the IMF for a given choice of function and mass range.
@@ -234,6 +235,7 @@ def ejected_dust_mass(m, sfr, zdiff, metallicity, choice):
                 * sfr * initial_mass_function(m, choice)
     return dej
 
+@profile
 def dust_masses_fresh(m, metallicity):
     '''
     This function returns the dust mass ejected by a star
