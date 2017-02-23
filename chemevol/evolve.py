@@ -194,7 +194,7 @@ class ChemModel:
             '''
             gas_ast = self.sfr(t)
             gas_inf = inflows(self.sfr(t), self.inflows['xSFR'])
-            gas_out = outflows_feldmann(self.sfr(t), mstars)
+            gas_out = outflows_feldmann(self.sfr(t), mstars,t)
             print 'time=',t,'sfr=',self.sfr(t)/1e9,'mstar=',mstars/1e8,'gas=',mg,'gas_ast=', gas_ast, 'gas_out=',gas_out,'epsilon_out',outflows_feldmann(self.sfr(t), mstars)/self.sfr(t)
             '''
             METALS: dMz = (-Z*sfr(t) + ez(t) + Z*inflows(t) - Z*outflows(t)) * dt
@@ -202,7 +202,7 @@ class ChemModel:
             '''
             metals_ast = astration(metals,mg,self.sfr(t))
             if self.outflows['metals']:
-                metals_out = metallicity*outflows_feldmann(self.sfr(t), mstars)
+                metals_out = metallicity*outflows_feldmann(self.sfr(t), mstars,t)
             else:
                 metals_out = 0.
             metals_inf = self.inflows['metals']*inflows(self.sfr(t), self.inflows['xSFR'])
@@ -213,7 +213,7 @@ class ChemModel:
             set up astration, inflows, outflows, destruction, grain growth components
             '''
             if self.outflows['dust']:
-                mdust_out = (md/mg)*outflows_feldmann(self.sfr(t), mstars)
+                mdust_out = (md/mg)*outflows_feldmann(self.sfr(t), mstars,t)
             else:
                 mdust_out = 0.
             mdust_inf = self.inflows['dust']*inflows(self.sfr(t), self.inflows['xSFR'])

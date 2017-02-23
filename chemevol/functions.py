@@ -431,7 +431,7 @@ def outflows(sfr,parameter):
     outflow_rate = sfr*parameter
     return outflow_rate
 
-def outflows_feldmann(sfr,m):
+def outflows_feldmann(sfr,m,t):
     '''
     Define outflow rate, parameterised by epsilon_out = 2*f_comb, outflows = epsilon_out x SFR
     See Feldmann et al 2015 MNRAS 449 327 - using same terminology as their paper
@@ -441,8 +441,8 @@ def outflows_feldmann(sfr,m):
     -- m: stellar mass at time t
     '''
     x = 1
-    m_low = 1e8 # graph simulations in Feldmann refered paper only go to logM* = 8.1 so we truncate mstar here
-    if (m < m_low):
+    #m_low = 1e8 # graph simulations in Feldmann refered paper only go to logM* = 8.1 so we truncate mstar here
+    if (t < 0.2):
         outflow_feld = 0.
     else:
         # equation from simulations
