@@ -190,8 +190,8 @@ class ChemModel:
                 self.inflows['on'],\
                 self.outflows['on'],\
                 self.inflows['xSFR'],\
-                self.sfr(t),\
-                mstars)
+                self.outflows['xSFR'],\
+                self.sfr(t))
         #    print 'time=',t,'sfr=',self.sfr(t)/1e9,'mstar=',mstars/1e10,'gas=','dust=',md_all/1e6,gas_out,gas_inf
 
             '''
@@ -207,9 +207,9 @@ class ChemModel:
                 self.inflows['metals'],\
                 self.outflows['on'],\
                 self.outflows['metals'],\
+                self.outflows['xSFR'],\
                 self.sfr(t),\
-                metallicity,
-                mstars)
+                metallicity)
 
             '''
             DUST: dMd = (-Md/Mg*sfr(t) + ed(t) + Md/Mg*inflows(t) - Md/Mg*outflows(t)
@@ -224,9 +224,9 @@ class ChemModel:
                 self.inflows['dust'],\
                 self.outflows['on'],\
                 self.outflows['dust'],\
+                self.outflows['xSFR'],\
                 self.sfr(t),\
-                (md/mg),
-                mstars)
+                (md/mg))
 
             mdust_ast = astration(md,mg,self.sfr(t))
 

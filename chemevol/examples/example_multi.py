@@ -55,7 +55,7 @@ from astropy.table import Table
 # each {} entry is per galaxy separated by comma in list
 
 inits = [
-			{	'name': 'Model_I_mstar',
+			{	'name': 'Model_I_test',
 				'gasmass_init': 4e10,
 				'SFH': 'Milkyway.sfh',
         		't_end': 20.,
@@ -65,24 +65,24 @@ inits = [
 				'reduce_sn_dust': False,
 				'destroy': {'on': False, 'mass': 0},
 				'inflows':{'on': False, 'metals': 0., 'xSFR': 0, 'dust': 0},
-				'outflows':{'on': False, 'metals': False, 'dust': False},
+				'outflows':{'on': False, 'metals': False, 'xSFR': 0, 'dust': False},
 				'cold_gas_fraction': 0.5,
 				'epsilon_grain': 0},
 
-			{	'name': 'Model_II',
+			{	'name': 'Model_II_test',
 				'gasmass_init': 4e10,
-				'SFH': 'MilkyWay.sfh',
+				'SFH': 'delayed.sfh',
         		't_end': 20.,
 				'gamma': 0,
 				'IMF_fn': 'Chab',
 				'dust_source': 'All',
 				'reduce_sn_dust': False,
-				'destroy': {'on': True, 'mass': 0},
+				'destroy': {'on': False, 'mass': 0},
 				'inflows':{'on': False, 'metals': 0., 'xSFR': 0, 'dust': 0},
-				'outflows':{'on': False, 'metals': False, 'dust': False},
+				'outflows':{'on': False, 'metals': False, 'xSFR': 0,'dust': False},
 				'cold_gas_fraction': 0.5,
-				'epsilon_grain': 800}
-        ]
+				'epsilon_grain': 0}
+    ]
 
 snrate = []
 all_results = []
